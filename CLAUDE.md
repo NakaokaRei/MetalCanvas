@@ -20,10 +20,14 @@ swift run MetalCanvasExample
 
 # Build the macOS Example app using Xcode
 cd Example
-xcodebuild -project MetalCanvasExample.xcodeproj -scheme MetalCanvasExample -configuration Debug build
+xcodebuild -workspace MetalCanvasExamples.xcworkspace -scheme MetalCanvasExample -configuration Debug build
 
-# Open the Example project in Xcode
-open Example/MetalCanvasExample.xcodeproj
+# Build the iOS Example app using Xcode
+cd Example
+xcodebuild -workspace MetalCanvasExamples.xcworkspace -scheme MetalCanvasExample-iOS -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 15' build
+
+# Open the Example workspace in Xcode
+open Example/MetalCanvasExamples.xcworkspace
 ```
 
 ## Architecture
@@ -74,9 +78,10 @@ struct VertexOut {
 ## Development Workflow
 
 When adding new features:
-1. Metal shaders go in Example/MetalCanvasExample/ShaderExamples.swift
+1. Metal shaders go in Example/Shared/ShaderExamples.swift (shared between macOS and iOS)
 2. Core rendering changes affect Sources/MetalCanvas/MetalCanvas.swift
 3. UI integration changes go in Sources/MetalCanvas/MetalCanvasView.swift
+4. Example apps are in Example/MetalCanvasExample-macOS and Example/MetalCanvasExample-iOS
 
 ## Common Issues
 

@@ -26,11 +26,20 @@ jobs:
     - name: Build Example App (SPM)
       run: swift build --product MetalCanvasExample
     
-    - name: Build Example App (Xcode)
+    - name: Build macOS Example App (Xcode)
       run: |
         cd Example
-        xcodebuild -project MetalCanvasExample.xcodeproj \
+        xcodebuild -workspace MetalCanvasExamples.xcworkspace \
           -scheme MetalCanvasExample \
           -configuration Debug \
           -destination 'platform=macOS' \
+          build
+    
+    - name: Build iOS Example App (Xcode)
+      run: |
+        cd Example
+        xcodebuild -workspace MetalCanvasExamples.xcworkspace \
+          -scheme MetalCanvasExample-iOS \
+          -configuration Debug \
+          -destination 'generic/platform=iOS Simulator' \
           build
