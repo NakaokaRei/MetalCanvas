@@ -22,6 +22,8 @@ public class MetalCanvas: NSObject {
     private var uniforms = Uniforms()
     private var textures = [String: MTLTexture]()
     
+    public var onShaderError: ((Error) -> Void)?
+    
     public var fragmentShaderSource: String? {
         didSet {
             print("MetalCanvas: fragmentShaderSource didSet - value: \(fragmentShaderSource != nil)")
@@ -149,6 +151,7 @@ public class MetalCanvas: NSObject {
             
         } catch {
             print("Error creating render pipeline: \(error)")
+            onShaderError?(error)
         }
     }
     

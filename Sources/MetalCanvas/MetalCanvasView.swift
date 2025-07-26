@@ -8,13 +8,16 @@ public struct MetalCanvasView: NSViewRepresentable {
     @Binding var fragmentShader: String?
     @Binding var vertexShader: String?
     let backgroundColor: Color
+    let onShaderError: ((Error) -> Void)?
     
     public init(fragmentShader: Binding<String?>, 
                 vertexShader: Binding<String?> = .constant(nil),
-                backgroundColor: Color = .black) {
+                backgroundColor: Color = .black,
+                onShaderError: ((Error) -> Void)? = nil) {
         self._fragmentShader = fragmentShader
         self._vertexShader = vertexShader
         self.backgroundColor = backgroundColor
+        self.onShaderError = onShaderError
     }
     
     public func makeCoordinator() -> Coordinator {
@@ -30,6 +33,7 @@ public struct MetalCanvasView: NSViewRepresentable {
         
         if let device = mtkView.device {
             context.coordinator.metalCanvas = MetalCanvas(metalDevice: device)
+            context.coordinator.metalCanvas?.onShaderError = onShaderError
             print("MetalCanvasView: Setting fragment shader - \(fragmentShader != nil)")
             context.coordinator.metalCanvas?.fragmentShaderSource = fragmentShader
             context.coordinator.metalCanvas?.vertexShaderSource = vertexShader
@@ -69,13 +73,16 @@ public struct MetalCanvasView: UIViewRepresentable {
     @Binding var fragmentShader: String?
     @Binding var vertexShader: String?
     let backgroundColor: Color
+    let onShaderError: ((Error) -> Void)?
     
     public init(fragmentShader: Binding<String?>, 
                 vertexShader: Binding<String?> = .constant(nil),
-                backgroundColor: Color = .black) {
+                backgroundColor: Color = .black,
+                onShaderError: ((Error) -> Void)? = nil) {
         self._fragmentShader = fragmentShader
         self._vertexShader = vertexShader
         self.backgroundColor = backgroundColor
+        self.onShaderError = onShaderError
     }
     
     public func makeCoordinator() -> Coordinator {
@@ -91,6 +98,7 @@ public struct MetalCanvasView: UIViewRepresentable {
         
         if let device = mtkView.device {
             context.coordinator.metalCanvas = MetalCanvas(metalDevice: device)
+            context.coordinator.metalCanvas?.onShaderError = onShaderError
             print("MetalCanvasView: Setting fragment shader - \(fragmentShader != nil)")
             context.coordinator.metalCanvas?.fragmentShaderSource = fragmentShader
             context.coordinator.metalCanvas?.vertexShaderSource = vertexShader
