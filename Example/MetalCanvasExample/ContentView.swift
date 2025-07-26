@@ -21,7 +21,7 @@ struct ContentView: View {
                 // Toolbar
                 HStack {
                     Text(selectedExample.name)
-                        .font(.headline)
+                        .font(.system(size: 18, weight: .semibold))
                     
                     Spacer()
                     
@@ -108,9 +108,9 @@ struct ShaderListView: View {
                     .foregroundColor(.accentColor)
                 VStack(alignment: .leading) {
                     Text(shader.name)
-                        .font(.headline)
+                        .font(.system(size: 16, weight: .semibold))
                     Text(shader.description)
-                        .font(.caption)
+                        .font(.system(size: 13))
                         .foregroundColor(.secondary)
                 }
             }
@@ -127,7 +127,7 @@ struct ShaderCodeView: View {
     var body: some View {
         ScrollView {
             Text(shader.source)
-                .font(.system(size: 14, design: .monospaced))
+                .font(.system(size: 18, design: .monospaced))
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -146,7 +146,7 @@ struct ShaderEditorView: View {
             if let error = shaderError {
                 ScrollView(.horizontal) {
                     Text(error)
-                        .font(.system(size: 12))
+                        .font(.system(size: 14))
                         .foregroundColor(.red)
                         .padding(.horizontal)
                         .padding(.vertical, 4)
@@ -156,7 +156,7 @@ struct ShaderEditorView: View {
             }
             
             TextEditor(text: $code)
-                .font(.system(size: 14, design: .monospaced))
+                .font(.system(size: 18, design: .monospaced))
                 .onChange(of: code) { oldValue, newValue in
                     // Delay to avoid too frequent updates
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
