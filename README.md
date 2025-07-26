@@ -18,11 +18,30 @@ https://github.com/user-attachments/assets/3d06bc45-9690-4a52-9e82-7d7bb3ab7daf
 
 ### Swift Package Manager
 
-Add MetalCanvas to your project:
+#### Xcode
+
+1. In Xcode, select **File > Add Package Dependencies...**
+2. Enter the repository URL: `https://github.com/NakaokaRei/MetalCanvas.git`
+3. Click **Add Package** and select the version
+
+#### Package.swift
+
+Add MetalCanvas to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/yourusername/MetalCanvas.git", from: "1.0.0")
+    .package(url: "https://github.com/NakaokaRei/MetalCanvas.git", from: "1.0.0")
+]
+```
+
+Then add `MetalCanvas` to your target's dependencies:
+
+```swift
+targets: [
+    .target(
+        name: "YourTarget",
+        dependencies: ["MetalCanvas"]
+    )
 ]
 ```
 
@@ -102,11 +121,25 @@ fragment float4 fragment_main(VertexOut in [[stage_in]],
 
 ## Examples
 
-Check out the `MetalCanvasExample` target for more shader examples:
-- Gradient animation
-- Animated circles
-- Plasma effect
-- Mandelbrot fractal
+Check out the example apps in the `Example` directory:
+
+### macOS Example
+Located in `Example/MetalCanvasExample-macOS/`:
+- Interactive shader editor with live preview
+- Built-in shader examples (gradient, circles, plasma, mandelbrot, waves, voronoi)
+- Play/pause controls
+- Code editor with syntax highlighting
+
+### iOS Example
+Located in `Example/MetalCanvasExample-iOS/`:
+- Shader gallery with segmented picker
+- Same built-in shader examples as macOS
+- Optimized for touch interface
+
+To run the examples:
+1. Open `Example/MetalCanvasExamples.xcworkspace`
+2. Select either `MetalCanvasExample` (macOS) or `MetalCanvasExample-iOS` scheme
+3. Build and run
 
 ## Requirements
 
