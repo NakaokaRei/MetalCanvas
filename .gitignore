@@ -21,7 +21,8 @@ DerivedData
 .build/
 .swiftpm/
 Package.resolved
-*.xcodeproj
+# Don't ignore Example project
+!Example/*.xcodeproj
 
 # CocoaPods
 Pods/
