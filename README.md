@@ -22,7 +22,8 @@ https://github.com/user-attachments/assets/3d06bc45-9690-4a52-9e82-7d7bb3ab7daf
 
 1. In Xcode, select **File > Add Package Dependencies...**
 2. Enter the repository URL: `https://github.com/NakaokaRei/MetalCanvas.git`
-3. Click **Add Package** and select the version
+3. For Dependency Rule, select **Branch** and enter `master`
+4. Click **Add Package**
 
 #### Package.swift
 
@@ -30,7 +31,7 @@ Add MetalCanvas to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/NakaokaRei/MetalCanvas.git", from: "1.0.0")
+    .package(url: "https://github.com/NakaokaRei/MetalCanvas.git", branch: "master")
 ]
 ```
 
