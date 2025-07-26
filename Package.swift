@@ -19,15 +19,9 @@ let package = Package(
     targets: [
         .target(
             name: "MetalCanvas",
-            dependencies: [],
-            resources: [
-                .process("Resources")
-            ]),
+            dependencies: []),
         .testTarget(
             name: "MetalCanvasTests",
             dependencies: ["MetalCanvas"]),
-        .executableTarget(
-            name: "MetalCanvasExample",
-            dependencies: ["MetalCanvas"])
     ]
 )
