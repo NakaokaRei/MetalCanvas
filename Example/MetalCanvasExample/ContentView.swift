@@ -127,7 +127,7 @@ struct ShaderCodeView: View {
     var body: some View {
         ScrollView {
             Text(shader.source)
-                .font(.system(.body, design: .monospaced))
+                .font(.system(size: 14, design: .monospaced))
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -146,7 +146,7 @@ struct ShaderEditorView: View {
             if let error = shaderError {
                 ScrollView(.horizontal) {
                     Text(error)
-                        .font(.caption)
+                        .font(.system(size: 12))
                         .foregroundColor(.red)
                         .padding(.horizontal)
                         .padding(.vertical, 4)
@@ -156,7 +156,7 @@ struct ShaderEditorView: View {
             }
             
             TextEditor(text: $code)
-                .font(.system(.body, design: .monospaced))
+                .font(.system(size: 14, design: .monospaced))
                 .onChange(of: code) { oldValue, newValue in
                     // Delay to avoid too frequent updates
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
