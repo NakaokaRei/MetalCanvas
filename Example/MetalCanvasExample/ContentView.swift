@@ -2,11 +2,11 @@ import SwiftUI
 import MetalCanvas
 
 struct ContentView: View {
-    @State private var fragmentShader: String? = ShaderExamples.gradient.source
-    @State private var selectedExample = ShaderExamples.gradient
+    @State private var fragmentShader: String? = ShaderExamples.solidRed.source
+    @State private var selectedExample = ShaderExamples.solidRed
     @State private var isPaused = false
     @State private var showCode = false
-    @State private var editableShaderCode: String = ShaderExamples.gradient.source
+    @State private var editableShaderCode: String = ShaderExamples.solidRed.source
     @State private var isEditing = false
     @State private var shaderError: String?
     

@@ -268,7 +268,36 @@ struct ShaderExamples {
         """
     )
     
+    static let solidRed = ShaderExample(
+        name: "Solid Red",
+        description: "Simple solid red color",
+        icon: "square.fill",
+        source: """
+        #include <metal_stdlib>
+        using namespace metal;
+        
+        struct FragmentUniforms {
+            float2 u_resolution;
+            float u_time;
+            float2 u_mouse;
+            float4 u_date;
+        };
+        
+        struct VertexOut {
+            float4 position [[position]];
+            float2 texCoord;
+        };
+        
+        fragment float4 fragment_main(VertexOut in [[stage_in]],
+                                     constant FragmentUniforms& uniforms [[buffer(0)]]) {
+            // Simply return red color
+            return float4(1.0, 0.0, 0.0, 1.0);
+        }
+        """
+    )
+    
     static let all: [ShaderExample] = [
+        solidRed,
         gradient,
         circles,
         plasma,
