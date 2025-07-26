@@ -2,6 +2,8 @@
 
 MetalCanvas is a Swift library for rendering Metal shaders on macOS and iOS, inspired by [glsl-canvas](https://github.com/actarian/glsl-canvas).
 
+https://github.com/user-attachments/assets/demo.mov
+
 ## Features
 
 - Easy-to-use Metal shader rendering
