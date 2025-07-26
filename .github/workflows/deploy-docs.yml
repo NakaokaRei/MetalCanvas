@@ -25,9 +25,15 @@ jobs:
     
     - name: Build DocC
       run: |
-        swift package generate-documentation \
-          --target MetalCanvas \
-          --transform-for-static-hosting \
+        # Generate documentation using xcodebuild
+        xcodebuild docbuild \
+          -scheme MetalCanvas \
+          -derivedDataPath ./DerivedData \
+          -destination 'platform=macOS'
+        
+        # Transform the documentation archive for static hosting
+        $(xcrun --find docc) process-archive \
+          transform-for-static-hosting ./DerivedData/Build/Products/Debug/MetalCanvas.doccarchive \
           --hosting-base-path MetalCanvas \
           --output-path ./docs
     
