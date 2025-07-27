@@ -9,15 +9,18 @@ public struct MetalCanvasView: NSViewRepresentable {
     @Binding var vertexShader: String?
     let backgroundColor: Color
     let onShaderError: ((Error) -> Void)?
+    let onCanvasCreated: ((MetalCanvas) -> Void)?
     
     public init(fragmentShader: Binding<String?>, 
                 vertexShader: Binding<String?> = .constant(nil),
                 backgroundColor: Color = .black,
-                onShaderError: ((Error) -> Void)? = nil) {
+                onShaderError: ((Error) -> Void)? = nil,
+                onCanvasCreated: ((MetalCanvas) -> Void)? = nil) {
         self._fragmentShader = fragmentShader
         self._vertexShader = vertexShader
         self.backgroundColor = backgroundColor
         self.onShaderError = onShaderError
+        self.onCanvasCreated = onCanvasCreated
     }
     
     public func makeCoordinator() -> Coordinator {
@@ -38,6 +41,11 @@ public struct MetalCanvasView: NSViewRepresentable {
             context.coordinator.metalCanvas?.fragmentShaderSource = fragmentShader
             context.coordinator.metalCanvas?.vertexShaderSource = vertexShader
             context.coordinator.metalCanvas?.backgroundColor = backgroundColor.metalClearColor
+            
+            // Call onCanvasCreated callback
+            if let canvas = context.coordinator.metalCanvas {
+                onCanvasCreated?(canvas)
+            }
         }
         
         // Set delegate after MetalCanvas is configured
@@ -74,15 +82,18 @@ public struct MetalCanvasView: UIViewRepresentable {
     @Binding var vertexShader: String?
     let backgroundColor: Color
     let onShaderError: ((Error) -> Void)?
+    let onCanvasCreated: ((MetalCanvas) -> Void)?
     
     public init(fragmentShader: Binding<String?>, 
                 vertexShader: Binding<String?> = .constant(nil),
                 backgroundColor: Color = .black,
-                onShaderError: ((Error) -> Void)? = nil) {
+                onShaderError: ((Error) -> Void)? = nil,
+                onCanvasCreated: ((MetalCanvas) -> Void)? = nil) {
         self._fragmentShader = fragmentShader
         self._vertexShader = vertexShader
         self.backgroundColor = backgroundColor
         self.onShaderError = onShaderError
+        self.onCanvasCreated = onCanvasCreated
     }
     
     public func makeCoordinator() -> Coordinator {
@@ -103,6 +114,11 @@ public struct MetalCanvasView: UIViewRepresentable {
             context.coordinator.metalCanvas?.fragmentShaderSource = fragmentShader
             context.coordinator.metalCanvas?.vertexShaderSource = vertexShader
             context.coordinator.metalCanvas?.backgroundColor = backgroundColor.metalClearColor
+            
+            // Call onCanvasCreated callback
+            if let canvas = context.coordinator.metalCanvas {
+                onCanvasCreated?(canvas)
+            }
         }
         
         // Set delegate after MetalCanvas is configured

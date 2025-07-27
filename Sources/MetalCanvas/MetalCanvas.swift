@@ -14,6 +14,7 @@ public class MetalCanvas: NSObject {
     
     private var startTime: Date
     private var timer: CanvasTimer
+    public let textureManager: TextureManager
     
     public var backgroundColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
     public var resolution: SIMD2<Float> = .zero
@@ -72,10 +73,12 @@ public class MetalCanvas: NSObject {
         self.commandQueue = commandQueue
         self.startTime = Date()
         self.timer = CanvasTimer()
+        self.textureManager = TextureManager(device: device)
         
         super.init()
         
         setupVertexBuffer()
+        createDefaultTexture()
     }
     
     private func setupVertexBuffer() {
@@ -89,6 +92,26 @@ public class MetalCanvas: NSObject {
         vertexBuffer = device.makeBuffer(bytes: vertices,
                                          length: vertices.count * MemoryLayout<Float>.stride,
                                          options: [])
+    }
+    
+    private func createDefaultTexture() {
+        // Create a 1x1 white texture as default
+        let descriptor = MTLTextureDescriptor()
+        descriptor.width = 1
+        descriptor.height = 1
+        descriptor.pixelFormat = .rgba8Unorm
+        descriptor.usage = [.shaderRead]
+        
+        guard let texture = device.makeTexture(descriptor: descriptor) else { return }
+        
+        let white: [UInt8] = [255, 255, 255, 255]
+        texture.replace(region: MTLRegion(origin: MTLOrigin(x: 0, y: 0, z: 0),
+                                         size: MTLSize(width: 1, height: 1, depth: 1)),
+                       mipmapLevel: 0,
+                       withBytes: white,
+                       bytesPerRow: 4)
+        
+        textures["_default"] = texture
     }
     
     private func loadShaders() {
@@ -215,6 +238,19 @@ public class MetalCanvas: NSObject {
             renderEncoder.setFragmentBuffer(uniformBuffer, offset: 0, index: 0)
         }
         
+        // Bind textures - always bind at least the default texture
+        var textureToUse: MTLTexture? = textures["_default"]
+        
+        // Use a specific texture if available (not the default)
+        for (key, texture) in textures where key != "_default" {
+            textureToUse = texture
+            break
+        }
+        
+        if let texture = textureToUse {
+            renderEncoder.setFragmentTexture(texture, index: 0)
+        }
+        
         renderEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: 4)
         renderEncoder.endEncoding()
         
@@ -225,7 +261,7 @@ public class MetalCanvas: NSObject {
     private func updateUniforms(size: CGSize) {
         resolution = SIMD2<Float>(Float(size.width), Float(size.height))
         
-        let time = Float(Date().timeIntervalSince(startTime))
+        let time = Float(timer.current)
         let date = Date()
         let calendar = Calendar.current
         
@@ -263,6 +299,14 @@ public class MetalCanvas: NSObject {
     
     public func toggle() {
         timer.toggle()
+    }
+    
+    public func reset() {
+        timer.reset()
+    }
+    
+    public var isTimerPaused: Bool {
+        return timer.isPaused
     }
 }
 
