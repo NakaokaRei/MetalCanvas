@@ -23,9 +23,6 @@ jobs:
     - name: Run Tests
       run: swift test
     
-    - name: Build Example App (SPM)
-      run: swift build --product MetalCanvasExample
-    
     - name: Build macOS Example App (Xcode)
       run: |
         cd Example
@@ -33,6 +30,8 @@ jobs:
           -scheme MetalCanvasExample \
           -configuration Debug \
           -destination 'platform=macOS' \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
           build
     
     - name: Build iOS Example App (Xcode)
@@ -42,4 +41,6 @@ jobs:
           -scheme MetalCanvasExample-iOS \
           -configuration Debug \
           -destination 'generic/platform=iOS Simulator' \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
           build
