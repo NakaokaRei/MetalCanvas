@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,7 +11,6 @@
 		1A0000001234567890000003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000001234567890000004 /* ContentView.swift */; };
 		1A0000001234567890000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A0000001234567890000008 /* Assets.xcassets */; };
 		5C6E20202E35958600E31858 /* MetalCanvas in Frameworks */ = {isa = PBXBuildFile; productRef = 5C6E201F2E35958600E31858 /* MetalCanvas */; };
-		5C6E20222E35962100E31858 /* ShaderExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C6E20212E35962100E31858 /* ShaderExamples.swift */; };
 		5CBA7EC22E350A1C00CBB992 /* MetalCanvas in Frameworks */ = {isa = PBXBuildFile; productRef = 5CBA7EC12E350A1C00CBB992 /* MetalCanvas */; };
 /* End PBXBuildFile section */
 
@@ -21,8 +20,11 @@
 		1A0000001234567890000008 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A0000001234567890000011 /* MetalCanvasExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetalCanvasExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A0000001234567890000012 /* MetalCanvasExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MetalCanvasExample.entitlements; sourceTree = "<group>"; };
-		5C6E20212E35962100E31858 /* ShaderExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ShaderExamples.swift; path = ../Shared/ShaderExamples.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5C6E20272E35A14600E31858 /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = Shared; path = ../Shared; sourceTree = SOURCE_ROOT; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1A0000001234567890000013 /* Frameworks */ = {
@@ -40,7 +42,7 @@
 		1A0000001234567890000014 /* MetalCanvasExample */ = {
 			isa = PBXGroup;
 			children = (
-				5C6E20212E35962100E31858 /* ShaderExamples.swift */,
+				5C6E20272E35A14600E31858 /* Shared */,
 				1A0000001234567890000002 /* MetalCanvasExampleApp.swift */,
 				1A0000001234567890000004 /* ContentView.swift */,
 				1A0000001234567890000008 /* Assets.xcassets */,
@@ -79,6 +81,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5C6E20272E35A14600E31858 /* Shared */,
 			);
 			name = MetalCanvasExample;
 			packageProductDependencies = (
@@ -141,7 +146,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C6E20222E35962100E31858 /* ShaderExamples.swift in Sources */,
 				1A0000001234567890000001 /* MetalCanvasExampleApp.swift in Sources */,
 				1A0000001234567890000003 /* ContentView.swift in Sources */,
 			);

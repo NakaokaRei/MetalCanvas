@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -25,6 +25,10 @@
 		8D3A48072B8F0A0100123456 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8D3A48102B8F0A4000123456 /* ShaderExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ShaderExamples.swift; path = ../../Shared/ShaderExamples.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		5C6E202A2E35A15600E31858 /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); name = Shared; path = ../Shared; sourceTree = SOURCE_ROOT; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		8D3A47F92B8F0A0000123456 /* Frameworks */ = {
@@ -58,6 +62,7 @@
 		8D3A47FE2B8F0A0000123456 /* MetalCanvasExample-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				5C6E202A2E35A15600E31858 /* Shared */,
 				8D3A47FF2B8F0A0000123456 /* MetalCanvasExampleApp.swift */,
 				8D3A48012B8F0A0000123456 /* ContentView.swift */,
 				8D3A48102B8F0A4000123456 /* ShaderExamples.swift */,
@@ -90,6 +95,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				5C6E202A2E35A15600E31858 /* Shared */,
 			);
 			name = "MetalCanvasExample-iOS";
 			packageProductDependencies = (

@@ -7,11 +7,4 @@
    <FileRef
       location = "group:MetalCanvasExample-iOS/MetalCanvasExample-iOS.xcodeproj">
    </FileRef>
-   <Group
-      location = "group:Shared"
-      name = "Shared">
-      <FileRef
-         location = "group:ShaderExamples.swift">
-      </FileRef>
-   </Group>
 </Workspace>
