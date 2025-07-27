@@ -4,6 +4,7 @@ import QuartzCore
 class CanvasTimer {
     private var startTime: TimeInterval
     private var pausedTime: TimeInterval = 0
+    private var pauseStartTime: TimeInterval = 0
     private var lastUpdateTime: TimeInterval = 0
     
     private(set) var current: TimeInterval = 0
@@ -27,13 +28,15 @@ class CanvasTimer {
     func pause() {
         guard !isPaused else { return }
         isPaused = true
-        pausedTime += CACurrentMediaTime() - lastUpdateTime
+        pauseStartTime = CACurrentMediaTime()
     }
     
     func play() {
         guard isPaused else { return }
         isPaused = false
-        lastUpdateTime = CACurrentMediaTime()
+        let now = CACurrentMediaTime()
+        pausedTime += now - pauseStartTime
+        lastUpdateTime = now
     }
     
     func toggle() {
@@ -48,6 +51,7 @@ class CanvasTimer {
         startTime = CACurrentMediaTime()
         lastUpdateTime = startTime
         pausedTime = 0
+        pauseStartTime = 0
         current = 0
         delta = 0
         isPaused = false
