@@ -12,8 +12,6 @@
 		8D3A48022B8F0A0000123456 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A48012B8F0A0000123456 /* ContentView.swift */; };
 		8D3A48042B8F0A0100123456 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D3A48032B8F0A0100123456 /* Assets.xcassets */; };
 		8D3A48082B8F0A0100123456 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D3A48072B8F0A0100123456 /* Preview Assets.xcassets */; };
-		8D3A480F2B8F0A3000123456 /* MetalCanvas in Frameworks */ = {isa = PBXBuildFile; productRef = 8D3A480E2B8F0A3000123456 /* MetalCanvas */; };
-		8D3A48112B8F0A4000123456 /* ShaderExamples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3A48102B8F0A4000123456 /* ShaderExamples.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,7 +34,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C6E201D2E35953600E31858 /* MetalCanvas in Frameworks */,
-				8D3A480F2B8F0A3000123456 /* MetalCanvas in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,7 +159,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D3A48022B8F0A0000123456 /* ContentView.swift in Sources */,
-				8D3A48112B8F0A4000123456 /* ShaderExamples.swift in Sources */,
 				8D3A48002B8F0A0000123456 /* MetalCanvasExampleApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
