@@ -296,6 +296,47 @@ struct ShaderExamples {
         """
     )
     
+    static let textureDemo = ShaderExample(
+        name: "Texture Demo",
+        description: "Display Metal icon texture",
+        icon: "photo.fill",
+        source: """
+        #include <metal_stdlib>
+        using namespace metal;
+        
+        struct FragmentUniforms {
+            float2 u_resolution;
+            float u_time;
+            float2 u_mouse;
+            float4 u_date;
+        };
+        
+        struct VertexOut {
+            float4 position [[position]];
+            float2 texCoord;
+        };
+        
+        fragment float4 fragment_main(VertexOut in [[stage_in]],
+                                     constant FragmentUniforms& uniforms [[buffer(0)]],
+                                     texture2d<float, access::sample> metalTexture [[texture(0)]]) {
+            constexpr sampler textureSampler(mag_filter::linear,
+                                           min_filter::linear,
+                                           address::clamp_to_edge);
+            
+            float2 uv = in.texCoord;
+            
+            // Simply sample and display the texture
+            float4 color = metalTexture.sample(textureSampler, uv);
+            
+            // Add a simple time-based brightness effect
+            float brightness = 0.8 + 0.2 * sin(uniforms.u_time * 2.0);
+            color.rgb *= brightness;
+            
+            return color;
+        }
+        """
+    )
+    
     static let all: [ShaderExample] = [
         solidRed,
         gradient,
@@ -303,6 +344,7 @@ struct ShaderExamples {
         plasma,
         mandelbrot,
         waves,
-        voronoi
+        voronoi,
+        textureDemo
     ]
 }
