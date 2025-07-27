@@ -1,14 +1,14 @@
 import Foundation
 import QuartzCore
 
-public class CanvasTimer {
+class CanvasTimer {
     private var startTime: TimeInterval
     private var pausedTime: TimeInterval = 0
     private var lastUpdateTime: TimeInterval = 0
     
-    public private(set) var current: TimeInterval = 0
-    public private(set) var delta: TimeInterval = 0
-    public private(set) var isPaused: Bool = false
+    private(set) var current: TimeInterval = 0
+    private(set) var delta: TimeInterval = 0
+    private(set) var isPaused: Bool = false
     
     init() {
         startTime = CACurrentMediaTime()

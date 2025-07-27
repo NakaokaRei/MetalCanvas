@@ -3,9 +3,24 @@ import Metal
 import MetalKit
 import simd
 
+/// A Metal-based canvas for rendering fragment shaders with built-in uniforms.
+///
+/// MetalCanvas provides an easy-to-use interface for rendering Metal shaders,
+/// similar to GLSL canvas tools. It automatically provides common uniforms like
+/// time, resolution, mouse position, and date to your shaders.
+///
+/// ## Example Usage
+/// ```swift
+/// let canvas = MetalCanvas(metalDevice: device)
+/// canvas.fragmentShaderSource = myShaderCode
+/// canvas.render(to: mtkView)
+/// ```
 public class MetalCanvas: NSObject {
     
+    /// The Metal device used for rendering.
     public var device: MTLDevice
+    
+    /// The command queue for encoding rendering commands.
     public var commandQueue: MTLCommandQueue
     
     private var renderPipelineState: MTLRenderPipelineState?
@@ -14,17 +29,28 @@ public class MetalCanvas: NSObject {
     
     private var startTime: Date
     private var timer: CanvasTimer
+    
+    /// The texture manager for loading and managing textures.
     public let textureManager: TextureManager
     
+    /// The background color used when clearing the canvas.
     public var backgroundColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 1)
+    
+    /// The current resolution of the rendering surface in pixels.
     public var resolution: SIMD2<Float> = .zero
+    
+    /// The current mouse position in pixels.
     public var mouse: SIMD2<Float> = .zero
     
-    private var uniforms = Uniforms()
     private var textures = [String: MTLTexture]()
     
+    /// A closure called when a shader compilation error occurs.
     public var onShaderError: ((Error) -> Void)?
     
+    /// The Metal fragment shader source code.
+    ///
+    /// When set, the shader is automatically compiled and the render pipeline is updated.
+    /// The shader should include the required uniform structures.
     public var fragmentShaderSource: String? {
         didSet {
             print("MetalCanvas: fragmentShaderSource didSet - value: \(fragmentShaderSource != nil)")
@@ -34,6 +60,9 @@ public class MetalCanvas: NSObject {
         }
     }
     
+    /// The Metal vertex shader source code.
+    ///
+    /// If not provided, a default vertex shader is used that renders a full-screen quad.
     public var vertexShaderSource: String?
     
     private var defaultVertexShader = """
@@ -59,6 +88,10 @@ public class MetalCanvas: NSObject {
     }
     """
     
+    /// Initializes a new MetalCanvas instance.
+    ///
+    /// - Parameter metalDevice: The Metal device to use for rendering. If nil, the system default device is used.
+    /// - Returns: A configured MetalCanvas instance, or nil if initialization fails.
     public init?(metalDevice: MTLDevice? = nil) {
         guard let device = metalDevice ?? MTLCreateSystemDefaultDevice() else {
             return nil
@@ -213,6 +246,12 @@ public class MetalCanvas: NSObject {
         """
     }
     
+    /// Renders the current shader to the specified MTKView.
+    ///
+    /// This method is typically called from an MTKViewDelegate's draw method.
+    /// It updates uniforms, binds textures, and executes the fragment shader.
+    ///
+    /// - Parameter view: The MTKView to render to.
     public func render(to view: MTKView) {
         guard let renderPipelineState = renderPipelineState,
               let drawable = view.currentDrawable,
@@ -285,26 +324,42 @@ public class MetalCanvas: NSObject {
                                          options: [])
     }
     
+    /// Sets a texture for use in shaders.
+    ///
+    /// - Parameters:
+    ///   - texture: The Metal texture to set.
+    ///   - key: A unique identifier for the texture.
     public func setTexture(_ texture: MTLTexture, for key: String) {
         textures[key] = texture
     }
     
+    /// Pauses the animation timer.
+    ///
+    /// When paused, the `u_time` uniform stops incrementing.
     public func pause() {
         timer.pause()
     }
     
+    /// Resumes the animation timer.
+    ///
+    /// When playing, the `u_time` uniform continues incrementing.
     public func play() {
         timer.play()
     }
     
+    /// Toggles the animation timer between paused and playing states.
     public func toggle() {
         timer.toggle()
     }
     
+    /// Resets the animation timer to zero.
+    ///
+    /// This resets the `u_time` uniform back to 0.0.
     public func reset() {
         timer.reset()
     }
     
+    /// Returns whether the animation timer is currently paused.
     public var isTimerPaused: Bool {
         return timer.isPaused
     }

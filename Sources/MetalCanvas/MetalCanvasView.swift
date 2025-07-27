@@ -4,6 +4,20 @@ import MetalKit
 #if os(macOS)
 import AppKit
 
+/// A SwiftUI view that displays a MetalCanvas for rendering shaders on macOS.
+///
+/// This view provides a SwiftUI wrapper around MetalCanvas, making it easy to
+/// integrate shader rendering into your SwiftUI app.
+///
+/// ## Example Usage
+/// ```swift
+/// MetalCanvasView(
+///     fragmentShader: $shaderCode,
+///     onShaderError: { error in
+///         print("Shader error: \(error)")
+///     }
+/// )
+/// ```
 public struct MetalCanvasView: NSViewRepresentable {
     @Binding var fragmentShader: String?
     @Binding var vertexShader: String?
@@ -11,6 +25,14 @@ public struct MetalCanvasView: NSViewRepresentable {
     let onShaderError: ((Error) -> Void)?
     let onCanvasCreated: ((MetalCanvas) -> Void)?
     
+    /// Creates a new MetalCanvasView.
+    ///
+    /// - Parameters:
+    ///   - fragmentShader: A binding to the fragment shader source code.
+    ///   - vertexShader: A binding to the vertex shader source code (optional).
+    ///   - backgroundColor: The background color of the canvas.
+    ///   - onShaderError: A closure called when a shader compilation error occurs.
+    ///   - onCanvasCreated: A closure called when the MetalCanvas instance is created.
     public init(fragmentShader: Binding<String?>, 
                 vertexShader: Binding<String?> = .constant(nil),
                 backgroundColor: Color = .black,
@@ -77,6 +99,20 @@ public struct MetalCanvasView: NSViewRepresentable {
 #else
 import UIKit
 
+/// A SwiftUI view that displays a MetalCanvas for rendering shaders on iOS.
+///
+/// This view provides a SwiftUI wrapper around MetalCanvas, making it easy to
+/// integrate shader rendering into your SwiftUI app.
+///
+/// ## Example Usage
+/// ```swift
+/// MetalCanvasView(
+///     fragmentShader: $shaderCode,
+///     onShaderError: { error in
+///         print("Shader error: \(error)")
+///     }
+/// )
+/// ```
 public struct MetalCanvasView: UIViewRepresentable {
     @Binding var fragmentShader: String?
     @Binding var vertexShader: String?
@@ -84,6 +120,14 @@ public struct MetalCanvasView: UIViewRepresentable {
     let onShaderError: ((Error) -> Void)?
     let onCanvasCreated: ((MetalCanvas) -> Void)?
     
+    /// Creates a new MetalCanvasView.
+    ///
+    /// - Parameters:
+    ///   - fragmentShader: A binding to the fragment shader source code.
+    ///   - vertexShader: A binding to the vertex shader source code (optional).
+    ///   - backgroundColor: The background color of the canvas.
+    ///   - onShaderError: A closure called when a shader compilation error occurs.
+    ///   - onCanvasCreated: A closure called when the MetalCanvas instance is created.
     public init(fragmentShader: Binding<String?>, 
                 vertexShader: Binding<String?> = .constant(nil),
                 backgroundColor: Color = .black,
