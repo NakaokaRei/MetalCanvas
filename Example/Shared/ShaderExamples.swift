@@ -298,8 +298,8 @@ struct ShaderExamples {
     
     static let textureDemo = ShaderExample(
         name: "Texture Demo",
-        description: "Display Metal icon texture",
-        icon: "photo.fill",
+        description: "Display Metal icon texture with sparkle effects",
+        icon: "sparkles",
         source: """
         #include <metal_stdlib>
         using namespace metal;
@@ -316,6 +316,24 @@ struct ShaderExamples {
             float2 texCoord;
         };
         
+        float random(float2 st) {
+            return fract(sin(dot(st.xy, float2(12.9898, 78.233))) * 43758.5453123);
+        }
+        
+        float noise(float2 st) {
+            float2 i = floor(st);
+            float2 f = fract(st);
+            
+            float a = random(i);
+            float b = random(i + float2(1.0, 0.0));
+            float c = random(i + float2(0.0, 1.0));
+            float d = random(i + float2(1.0, 1.0));
+            
+            float2 u = f * f * (3.0 - 2.0 * f);
+            
+            return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+        }
+        
         fragment float4 fragment_main(VertexOut in [[stage_in]],
                                      constant FragmentUniforms& uniforms [[buffer(0)]],
                                      texture2d<float, access::sample> metalTexture [[texture(0)]]) {
@@ -324,13 +342,50 @@ struct ShaderExamples {
                                            address::clamp_to_edge);
             
             float2 uv = in.texCoord;
+            float2 fragCoord = in.position.xy;
             
-            // Simply sample and display the texture
+            // Sample the base texture
             float4 color = metalTexture.sample(textureSampler, uv);
             
-            // Add a simple time-based brightness effect
-            float brightness = 0.8 + 0.2 * sin(uniforms.u_time * 2.0);
+            // Add time-based wave effect
+            float wave = sin(uv.y * 10.0 + uniforms.u_time * 2.0) * 0.01;
+            float2 distortedUV = uv + float2(wave, 0);
+            float4 distortedColor = metalTexture.sample(textureSampler, distortedUV);
+            color = mix(color, distortedColor, 0.3);
+            
+            // Calculate sparkle positions
+            float sparkleScale = 50.0;
+            float2 sparkleUV = fragCoord / sparkleScale;
+            
+            // Create multiple layers of sparkles
+            float sparkle1 = noise(sparkleUV + uniforms.u_time * 0.5);
+            float sparkle2 = noise(sparkleUV * 2.0 - uniforms.u_time * 0.3);
+            float sparkle3 = noise(sparkleUV * 3.0 + uniforms.u_time * 0.7);
+            
+            // Make sparkles sharp and bright
+            sparkle1 = pow(sparkle1, 8.0) * 2.0;
+            sparkle2 = pow(sparkle2, 10.0) * 3.0;
+            sparkle3 = pow(sparkle3, 12.0) * 4.0;
+            
+            // Combine sparkles
+            float totalSparkle = sparkle1 + sparkle2 + sparkle3;
+            
+            // Add rainbow colors to sparkles
+            float3 sparkleColor = 0.5 + 0.5 * cos(uniforms.u_time + uv.xyx + float3(0, 2, 4));
+            
+            // Apply sparkles to the texture
+            color.rgb += sparkleColor * totalSparkle * 0.5;
+            
+            // Add brightness variation
+            float brightness = 0.9 + 0.1 * sin(uniforms.u_time * 3.0);
             color.rgb *= brightness;
+            
+            // Add a subtle glow effect
+            float glow = sin(uniforms.u_time * 2.0) * 0.5 + 0.5;
+            color.rgb += float3(0.1, 0.2, 0.3) * glow * 0.2;
+            
+            // Ensure we don't exceed maximum brightness
+            color.rgb = clamp(color.rgb, 0.0, 1.0);
             
             return color;
         }
