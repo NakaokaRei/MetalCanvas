@@ -33,21 +33,46 @@ class MouseTrackingMTKView: MTKView {
     
     override func mouseMoved(with event: NSEvent) {
         let location = convert(event.locationInWindow, from: nil)
-        // Flip Y coordinate to match Metal's coordinate system (bottom-left origin)
-        let flippedLocation = CGPoint(x: location.x, y: bounds.height - location.y)
-        mouseMovedHandler?(flippedLocation)
+        // Get the drawable size to account for Retina displays
+        let drawableSize = self.drawableSize
+        let viewSize = self.bounds.size
+        
+        // Scale the coordinates to match the drawable size
+        let scaleX = drawableSize.width / viewSize.width
+        let scaleY = drawableSize.height / viewSize.height
+        
+        // Flip Y coordinate and scale - macOS AppKit uses top-left origin, Metal uses bottom-left
+        let scaledLocation = CGPoint(
+            x: location.x * scaleX,
+            y: (viewSize.height - location.y) * scaleY
+        )
+        mouseMovedHandler?(scaledLocation)
     }
     
     override func mouseDown(with event: NSEvent) {
         let location = convert(event.locationInWindow, from: nil)
-        let flippedLocation = CGPoint(x: location.x, y: bounds.height - location.y)
-        mouseMovedHandler?(flippedLocation)
+        let drawableSize = self.drawableSize
+        let viewSize = self.bounds.size
+        let scaleX = drawableSize.width / viewSize.width
+        let scaleY = drawableSize.height / viewSize.height
+        let scaledLocation = CGPoint(
+            x: location.x * scaleX,
+            y: (viewSize.height - location.y) * scaleY
+        )
+        mouseMovedHandler?(scaledLocation)
     }
     
     override func mouseDragged(with event: NSEvent) {
         let location = convert(event.locationInWindow, from: nil)
-        let flippedLocation = CGPoint(x: location.x, y: bounds.height - location.y)
-        mouseMovedHandler?(flippedLocation)
+        let drawableSize = self.drawableSize
+        let viewSize = self.bounds.size
+        let scaleX = drawableSize.width / viewSize.width
+        let scaleY = drawableSize.height / viewSize.height
+        let scaledLocation = CGPoint(
+            x: location.x * scaleX,
+            y: (viewSize.height - location.y) * scaleY
+        )
+        mouseMovedHandler?(scaledLocation)
     }
 }
 
@@ -118,8 +143,9 @@ public struct MetalCanvasView: NSViewRepresentable {
         }
         
         // Set up mouse tracking
-        mtkView.mouseMovedHandler = { [weak context] location in
-            context?.coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
+        let coordinator = context.coordinator
+        mtkView.mouseMovedHandler = { location in
+            coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
         }
         
         // Set delegate after MetalCanvas is configured
@@ -136,8 +162,9 @@ public struct MetalCanvasView: NSViewRepresentable {
         
         // Update mouse handler if the view is MouseTrackingMTKView
         if let trackingView = nsView as? MouseTrackingMTKView {
-            trackingView.mouseMovedHandler = { [weak context] location in
-                context?.coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
+            let coordinator = context.coordinator
+            trackingView.mouseMovedHandler = { location in
+                coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
             }
         }
     }
@@ -166,9 +193,20 @@ class TouchTrackingMTKView: MTKView {
         super.touchesBegan(touches, with: event)
         if let touch = touches.first {
             let location = touch.location(in: self)
-            // Flip Y coordinate to match Metal's coordinate system (bottom-left origin)
-            let flippedLocation = CGPoint(x: location.x, y: bounds.height - location.y)
-            touchMovedHandler?(flippedLocation)
+            // Get the drawable size to account for Retina displays
+            let drawableSize = self.drawableSize
+            let viewSize = self.bounds.size
+            
+            // Scale the coordinates to match the drawable size
+            let scaleX = drawableSize.width / viewSize.width
+            let scaleY = drawableSize.height / viewSize.height
+            
+            // Scale but don't flip Y coordinate for iOS
+            let scaledLocation = CGPoint(
+                x: location.x * scaleX,
+                y: location.y * scaleY
+            )
+            touchMovedHandler?(scaledLocation)
         }
     }
     
@@ -176,8 +214,15 @@ class TouchTrackingMTKView: MTKView {
         super.touchesMoved(touches, with: event)
         if let touch = touches.first {
             let location = touch.location(in: self)
-            let flippedLocation = CGPoint(x: location.x, y: bounds.height - location.y)
-            touchMovedHandler?(flippedLocation)
+            let drawableSize = self.drawableSize
+            let viewSize = self.bounds.size
+            let scaleX = drawableSize.width / viewSize.width
+            let scaleY = drawableSize.height / viewSize.height
+            let scaledLocation = CGPoint(
+                x: location.x * scaleX,
+                y: location.y * scaleY
+            )
+            touchMovedHandler?(scaledLocation)
         }
     }
     
@@ -185,8 +230,15 @@ class TouchTrackingMTKView: MTKView {
         super.touchesEnded(touches, with: event)
         if let touch = touches.first {
             let location = touch.location(in: self)
-            let flippedLocation = CGPoint(x: location.x, y: bounds.height - location.y)
-            touchMovedHandler?(flippedLocation)
+            let drawableSize = self.drawableSize
+            let viewSize = self.bounds.size
+            let scaleX = drawableSize.width / viewSize.width
+            let scaleY = drawableSize.height / viewSize.height
+            let scaledLocation = CGPoint(
+                x: location.x * scaleX,
+                y: location.y * scaleY
+            )
+            touchMovedHandler?(scaledLocation)
         }
     }
 }
@@ -258,8 +310,9 @@ public struct MetalCanvasView: UIViewRepresentable {
         }
         
         // Set up touch tracking
-        mtkView.touchMovedHandler = { [weak context] location in
-            context?.coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
+        let coordinator = context.coordinator
+        mtkView.touchMovedHandler = { location in
+            coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
         }
         
         // Set delegate after MetalCanvas is configured
@@ -276,8 +329,9 @@ public struct MetalCanvasView: UIViewRepresentable {
         
         // Update touch handler if the view is TouchTrackingMTKView
         if let trackingView = uiView as? TouchTrackingMTKView {
-            trackingView.touchMovedHandler = { [weak context] location in
-                context?.coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
+            let coordinator = context.coordinator
+            trackingView.touchMovedHandler = { location in
+                coordinator.metalCanvas?.mouse = SIMD2<Float>(Float(location.x), Float(location.y))
             }
         }
     }
