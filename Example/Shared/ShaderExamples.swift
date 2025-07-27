@@ -392,6 +392,61 @@ struct ShaderExamples {
         """
     )
     
+    static let mouseTracker = ShaderExample(
+        name: "Mouse Tracker",
+        description: "Interactive mouse/touch tracking",
+        icon: "cursorarrow.rays",
+        source: """
+        #include <metal_stdlib>
+        using namespace metal;
+        
+        struct FragmentUniforms {
+            float2 u_resolution;
+            float u_time;
+            float2 u_mouse;
+            float4 u_date;
+        };
+        
+        struct VertexOut {
+            float4 position [[position]];
+            float2 texCoord;
+        };
+        
+        fragment float4 fragment_main(VertexOut in [[stage_in]],
+                                     constant FragmentUniforms& uniforms [[buffer(0)]]) {
+            float2 fragCoord = in.position.xy;
+            float2 uv = fragCoord / uniforms.u_resolution;
+            
+            // Mouse position in UV coordinates
+            float2 mouseUV = uniforms.u_mouse / uniforms.u_resolution;
+            
+            // Distance from fragment to mouse
+            float dist = distance(uv, mouseUV);
+            
+            // Create ripple effect
+            float ripple = sin(dist * 50.0 - uniforms.u_time * 5.0) * 0.5 + 0.5;
+            ripple *= exp(-dist * 3.0);
+            
+            // Background gradient
+            float3 bgColor = mix(float3(0.1, 0.1, 0.2), float3(0.2, 0.1, 0.3), uv.y);
+            
+            // Mouse glow
+            float glow = exp(-dist * 5.0);
+            float3 glowColor = float3(0.5, 0.8, 1.0) * glow;
+            
+            // Combine effects
+            float3 color = bgColor + glowColor + ripple * float3(0.2, 0.4, 0.8);
+            
+            // Add a cursor indicator
+            if (dist < 0.02) {
+                color = float3(1.0);
+            }
+            
+            return float4(color, 1.0);
+        }
+        """
+    )
+    
     static let all: [ShaderExample] = [
         solidRed,
         gradient,
@@ -400,6 +455,7 @@ struct ShaderExamples {
         mandelbrot,
         waves,
         voronoi,
-        textureDemo
+        textureDemo,
+        mouseTracker
     ]
 }
